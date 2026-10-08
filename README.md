@@ -38,6 +38,14 @@ Add `?date=2026-01-20` to the web address to preview another week.
 
 `crops.json` is starter data written from general knowledge for the southern wet zone. Check sowing windows with your local Agrarian Service Centre or the Department of Agriculture, and edit the file to match what works in your soil.
 
+## Tests and CI
+
+```
+python -m unittest discover -s tests -v
+```
+
+The tests cover the crop data, the weekly rules, ticking and saving, the note cleanup and the web API (no Ollama needed). A GitHub Actions workflow in `.github/workflows/ci.yml` runs them on Python 3.9, 3.11 and 3.13 for every push and pull request. It also builds the checklist for all 12 months and starts the web app to check it serves the page.
+
 ## Why open-source AI here
 
 - It runs with no internet, which matters in a garden with weak signal.

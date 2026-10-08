@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Tests (Python ${{ matrix.python }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.9", "3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Text checklist works for every month
+        run: |
+          for m in 01 02 03 04 05 06 07 08 09 10 11 12; do
+            python planner.py --no-ai --date 2026-$m-15 > /dev/null
+          done
+
+      - name: Web app starts and serves the plan
+        run: |
+          python server.py --no-browser --port 8765 &
+          for i in $(seq 1 20); do
+            curl -sf http://localhost:8765/api/plan > /dev/null && break
+            sleep 0.5
+          done
+          curl -sf http://localhost:8765/ | grep -q "Matara Garden"
+          curl -sf http://localhost:8765/api/plan | python -c "import json,sys; p=json.load(sys.stdin); assert p['care'], 'no care items'"
