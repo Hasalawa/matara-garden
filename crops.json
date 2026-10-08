@@ -1,0 +1,25 @@
+{
+  "_note": "STARTER DATA for Matara district (southern low-country wet zone), written from general knowledge. Verify sowing windows with your local Agrarian Service Centre / Department of Agriculture and edit freely.",
+  "location": "Matara, Sri Lanka",
+  "rainfall_level": {
+    "1": 2, "2": 1, "3": 2, "4": 3, "5": 4, "6": 3,
+    "7": 2, "8": 2, "9": 3, "10": 4, "11": 4, "12": 3
+  },
+  "rainfall_labels": {"1": "drier", "2": "moderate", "3": "wet", "4": "very wet"},
+  "crops": [
+    {"id": "okra", "name_en": "Okra", "name_si": "බණ්ඩක්කා", "sow_months": [1,2,3,4,8,9,12], "method": "direct seed", "days_to_harvest": 55, "spacing_cm": 45, "sun_need": "full", "rain_tolerance": "medium", "tip": "Hates waterlogged soil, so sow on a slight mound."},
+    {"id": "long_bean", "name_en": "Long bean", "name_si": "මෑ", "sow_months": [2,3,4,5,8,9,10], "method": "direct seed + trellis", "days_to_harvest": 65, "spacing_cm": 30, "sun_need": "full", "rain_tolerance": "medium", "tip": "Give it a trellis or stakes from day one."},
+    {"id": "brinjal", "name_en": "Brinjal", "name_si": "වම්බටු", "sow_months": [4,5,9,10], "method": "nursery, transplant after ~4 weeks", "days_to_harvest": 100, "spacing_cm": 60, "sun_need": "full", "rain_tolerance": "medium", "tip": "Stake plants once they flower."},
+    {"id": "chili", "name_en": "Chili", "name_si": "මිරිස්", "sow_months": [3,4,5,9,10,11], "method": "nursery, transplant after ~4 weeks", "days_to_harvest": 100, "spacing_cm": 45, "sun_need": "full", "rain_tolerance": "medium", "tip": "Good drainage matters more than extra water."},
+    {"id": "tomato", "name_en": "Tomato", "name_si": "තක්කාලි", "sow_months": [12,1,2], "method": "nursery, transplant after ~4 weeks", "days_to_harvest": 85, "spacing_cm": 50, "sun_need": "full", "rain_tolerance": "low", "tip": "Struggles in heavy rain, so grow in the drier months and stake well."},
+    {"id": "snake_gourd", "name_en": "Snake gourd", "name_si": "පතෝල", "sow_months": [4,5,9,10], "method": "direct seed + trellis", "days_to_harvest": 65, "spacing_cm": 100, "sun_need": "full", "rain_tolerance": "high", "tip": "Hang a small weight on young fruits to keep them straight."},
+    {"id": "bitter_gourd", "name_en": "Bitter gourd", "name_si": "කරවිල", "sow_months": [3,4,5,9,10], "method": "direct seed + trellis", "days_to_harvest": 65, "spacing_cm": 90, "sun_need": "full", "rain_tolerance": "high", "tip": "Soak seeds overnight before sowing."},
+    {"id": "pumpkin", "name_en": "Pumpkin", "name_si": "වට්ටක්කා", "sow_months": [4,5,9,10], "method": "direct seed", "days_to_harvest": 100, "spacing_cm": 200, "sun_need": "full", "rain_tolerance": "medium", "tip": "Needs lots of space; only for bigger gardens."},
+    {"id": "cucumber", "name_en": "Cucumber", "name_si": "පිපිඤ්ඤා", "sow_months": [1,2,3,8,9], "method": "direct seed + trellis", "days_to_harvest": 50, "spacing_cm": 40, "sun_need": "full", "rain_tolerance": "low", "tip": "Fast crop; avoid the very wet months."},
+    {"id": "sweet_potato", "name_en": "Sweet potato", "name_si": "බතල", "sow_months": [4,5,9,10,11], "method": "vine cuttings", "days_to_harvest": 105, "spacing_cm": 40, "sun_need": "full", "rain_tolerance": "medium", "tip": "Plant on ridges so tubers don't rot."},
+    {"id": "kang_kung", "name_en": "Water spinach (kang kung)", "name_si": "කංකුං", "sow_months": [1,2,3,4,5,6,7,8,9,10,11,12], "method": "cuttings or seed", "days_to_harvest": 30, "spacing_cm": 15, "sun_need": "partial_ok", "rain_tolerance": "high", "tip": "Loves wet conditions; cut and it regrows."},
+    {"id": "gotukola", "name_en": "Gotukola", "name_si": "ගොටුකොළ", "sow_months": [1,2,3,4,5,6,7,8,9,10,11,12], "method": "runners / division", "days_to_harvest": 50, "spacing_cm": 15, "sun_need": "partial_ok", "rain_tolerance": "high", "tip": "Keep the soil moist; happy in partial shade."},
+    {"id": "mukunuwenna", "name_en": "Mukunuwenna", "name_si": "මුකුණුවැන්න", "sow_months": [1,2,3,4,5,6,7,8,9,10,11,12], "method": "stem cuttings", "days_to_harvest": 35, "spacing_cm": 20, "sun_need": "partial_ok", "rain_tolerance": "high", "tip": "Harvest tips regularly to keep it bushy."},
+    {"id": "thampala", "name_en": "Red amaranth (thampala)", "name_si": "තම්පලා", "sow_months": [1,2,3,4,5,6,7,8,9,10,11,12], "method": "direct seed", "days_to_harvest": 30, "spacing_cm": 10, "sun_need": "partial_ok", "rain_tolerance": "high", "tip": "Sow a small patch every 2 weeks for steady leaves."}
+  ]
+}

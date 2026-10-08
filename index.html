@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Matara Garden</title>
+<style>
+:root{
+  --bg:#e7eee3; --surface:#f5f9f2; --ink:#12251a; --muted:#566a5c; --line:#c4d3bf;
+  --leaf:#2a7545; --leaf-ink:#ffffff; --water:#3a7ca5; --turmeric:#c98d0c; --chili:#b8372a;
+  --display:"Bahnschrift","DIN Alternate","Avenir Next Condensed","Roboto Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:system-ui,-apple-system,"Segoe UI","Nirmala UI","Iskoola Pota","Noto Sans Sinhala",Roboto,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#0e1b13; --surface:#15261b; --ink:#e3eee2; --muted:#93a897; --line:#254030;
+    --leaf:#5cbd7d; --leaf-ink:#0e1b13; --water:#6fb4dc; --turmeric:#f0b43a; --chili:#ff8071;}
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--body)}
+.wrap{max-width:720px;margin:0 auto;padding:28px 16px 64px}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--water);outline-offset:2px}
+
+/* header */
+.top{display:flex;gap:20px;align-items:flex-end;justify-content:space-between;padding-bottom:20px;border-bottom:2px solid var(--ink)}
+.top h1{font:600 clamp(34px,8vw,52px)/1 var(--display);letter-spacing:-.01em;margin:0 0 10px}
+.top .range{margin:0;color:var(--muted)}
+.top .facts{margin:12px 0 0;display:flex;flex-wrap:wrap;gap:6px 18px;font-size:15px}
+.top .facts b{font-weight:600}
+.gauge{flex:none;text-align:center;font-size:13px;color:var(--muted)}
+.gauge svg{display:block;margin:0 auto 4px}
+.gauge strong{display:block;color:var(--ink);font:600 15px var(--display)}
+
+/* progress */
+.progress{display:flex;align-items:center;gap:14px;padding:16px 0}
+.bar{flex:1;height:10px;background:var(--line);border-radius:5px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--leaf);border-radius:5px;transition:width .35s ease}
+.progress p{margin:0;font:600 15px var(--display);white-space:nowrap}
+
+/* note */
+.note{margin:4px 0 8px;padding:2px 0 2px 16px;border-left:4px solid var(--water)}
+.note .who{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 0 6px;font-size:14px;color:var(--muted)}
+.lang{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.lang button{background:none;border:0;padding:3px 10px;cursor:pointer;color:var(--muted)}
+.lang button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.note p.text{margin:0;font-size:18px;line-height:1.55;max-width:60ch}
+.note p.off{margin:0;color:var(--muted);font-size:15px}
+.skel{display:block;height:14px;margin:9px 0;border-radius:4px;background:linear-gradient(90deg,var(--line),transparent,var(--line));background-size:200% 100%;animation:sh 1.4s linear infinite}
+@keyframes sh{to{background-position:-200% 0}}
+
+/* sections */
+section.list{margin-top:30px}
+section.list h2{display:flex;align-items:baseline;gap:10px;margin:0;padding-bottom:6px;border-bottom:1px solid var(--ink);font:600 24px var(--display)}
+section.list h2 small{font:400 14px var(--body);color:var(--muted)}
+.empty{margin:14px 0 0;color:var(--muted)}
+
+.row{position:relative;display:flex;gap:14px;align-items:flex-start;padding:14px 4px;border-bottom:1px solid var(--line);cursor:pointer}
+.row input{position:absolute;opacity:0;width:28px;height:28px;margin:0;cursor:pointer}
+.box{flex:none;width:28px;height:28px;margin-top:1px;border:2px solid var(--muted);border-radius:50%;display:grid;place-items:center;transition:background .15s,border-color .15s}
+.box svg{width:16px;height:16px;stroke:var(--leaf-ink);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:22;stroke-dashoffset:22;transition:stroke-dashoffset .25s ease}
+.row input:checked + .box{background:var(--leaf);border-color:var(--leaf)}
+.row input:checked + .box svg{stroke-dashoffset:0}
+.row input:focus-visible + .box{outline:3px solid var(--water);outline-offset:2px}
+.row:hover .box{border-color:var(--leaf)}
+.txt{display:flex;flex-direction:column;gap:2px;min-width:0}
+.t{font-weight:600;font-size:17px}
+.t .local{font-weight:400;color:var(--muted);margin-left:6px}
+.d{color:var(--muted);font-size:15px}
+.tip{font-size:15px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.tag{font-size:13px;padding:1px 8px;border-radius:4px;border:1px solid currentColor}
+.tag.warn{color:var(--chili)} .tag.ok{color:var(--leaf)} .tag.late{color:var(--turmeric)}
+.row.done .t,.row.done .d,.row.done .tip{color:var(--muted);text-decoration:line-through;text-decoration-thickness:1px}
+.row.done .tags{display:none}
+.more{margin:12px 0 0;background:none;border:1px solid var(--line);border-radius:6px;padding:7px 14px;cursor:pointer;color:var(--ink)}
+.more:hover{border-color:var(--ink)}
+.hold{margin:14px 0 0;color:var(--muted);font-size:15px}
+
+/* garden */
+.beds{list-style:none;margin:0;padding:0}
+.beds li{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:12px 4px;border-bottom:1px solid var(--line)}
+.beds .meter{grid-column:1/-1;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.beds .meter i{display:block;height:100%;background:var(--leaf)}
+.beds .meter i.ready{background:var(--turmeric)}
+.beds .meta{color:var(--muted);font-size:14px}
+.link{background:none;border:0;padding:0;color:var(--chili);cursor:pointer;text-decoration:underline;font-size:14px}
+details.mine{margin-top:34px}
+details.mine summary{cursor:pointer;font:600 24px var(--display);padding-bottom:6px;border-bottom:1px solid var(--ink);list-style:none;display:flex;justify-content:space-between;align-items:baseline}
+details.mine summary::-webkit-details-marker{display:none}
+details.mine summary small{font:400 14px var(--body);color:var(--muted)}
+.form{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin:16px 0}
+.form label{display:flex;flex-direction:column;gap:3px;font-size:14px;color:var(--muted)}
+.form select,.form input{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:8px 10px;color:var(--ink);min-height:40px}
+.btn{background:var(--leaf);color:var(--leaf-ink);border:0;border-radius:6px;padding:9px 16px;font-weight:600;cursor:pointer;min-height:40px}
+.btn:hover{filter:brightness(1.08)}
+.foot{margin-top:40px;color:var(--muted);font-size:14px;max-width:62ch}
+#toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;opacity:0;pointer-events:none;transition:.25s;max-width:90vw}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+@media (max-width:520px){.top{flex-direction:column;align-items:flex-start}.gauge{align-self:flex-start;text-align:left}.gauge svg{margin:0 0 4px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="top">
+    <div>
+      <h1>This week in the garden</h1>
+      <p class="range" id="range">&nbsp;</p>
+      <p class="facts" id="facts"></p>
+    </div>
+    <div class="gauge" id="gauge"></div>
+  </header>
+
+  <div class="progress"><div class="bar"><i id="fill"></i></div><p id="ptext"></p></div>
+
+  <aside class="note" id="note"></aside>
+
+  <div id="lists"></div>
+
+  <details class="mine" id="mine">
+    <summary><span>My garden</span><small id="minecount"></small></summary>
+    <form class="form" id="addform">
+      <label>Crop <select id="addcrop" required></select></label>
+      <label>Planted on <input type="date" id="adddate" required></label>
+      <button class="btn" type="submit">Add to my garden</button>
+    </form>
+    <ul class="beds" id="beds"></ul>
+    <form class="form" id="setform">
+      <label>Sunlight
+        <select id="sun"><option value="full">Full sun</option><option value="partial">Partial shade</option></select>
+      </label>
+      <label>Garden size (m²) <input type="number" id="size" min="1" step="1" style="width:110px"></label>
+      <button class="btn" type="submit">Save settings</button>
+    </form>
+  </details>
+
+  <p class="foot">Sowing windows are starter data for Matara's southern wet zone. Check them with your local Agrarian Service Centre and edit crops.json to match what works in your soil.</p>
+</main>
+<div id="toast" role="status"></div>
+
+<script>
+"use strict";
+const $ = (s) => document.querySelector(s);
+const DEMO = new URLSearchParams(location.search).get("date");
+const store = {
+  get(k, d){ try { return localStorage.getItem(k) || d; } catch { return d; } },
+  set(k, v){ try { localStorage.setItem(k, v); } catch {} }
+};
+let lang = store.get("lang", "en");
+let plan = null;
+let showAllSow = false;
+
+function h(tag, props, ...kids){
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(props || {})){
+    if (v == null || v === false) continue;
+    if (k === "class") e.className = v;
+    else if (k.startsWith("on")) e.addEventListener(k.slice(2), v);
+    else if (k in e) e[k] = v;
+    else e.setAttribute(k, v);
+  }
+  for (const kid of kids.flat()){
+    if (kid == null || kid === false) continue;
+    e.append(kid.nodeType ? kid : document.createTextNode(kid));
+  }
+  return e;
+}
+function toast(msg){
+  const t = $("#toast"); t.textContent = msg; t.classList.add("on");
+  clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("on"), 3200);
+}
+async function api(path, body){
+  const withDate = DEMO ? { ...(body || {}), date: DEMO } : body;
+  const url = path + (!body && DEMO ? (path.includes("?") ? "&" : "?") + "date=" + DEMO : "");
+  const res = await fetch(url, body ? { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(withDate) } : undefined);
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || "Something went wrong");
+  return data;
+}
+const fmt = (iso, opts) => new Date(iso + "T00:00:00").toLocaleDateString(undefined, opts || { day: "numeric", month: "short" });
+
+/* ---------- header ---------- */
+function gaugeSVG(level){
+  const top = 8, bottom = 96, inner = bottom - top, fill = inner * level / 4;
+  let ticks = "";
+  for (let i = 1; i <= 4; i++){
+    const y = bottom - inner * i / 4;
+    ticks += `<line x1="26" x2="${i === 4 ? 36 : 32}" y1="${y}" y2="${y}" stroke="currentColor" stroke-width="1.5"/>`;
+  }
+  return `<svg width="44" height="104" viewBox="0 0 44 104" aria-hidden="true">
+    <clipPath id="tube"><rect x="8" y="${top}" width="18" height="${inner}" rx="9"/></clipPath>
+    <rect x="8" y="${top}" width="18" height="${inner}" rx="9" fill="none" stroke="currentColor" stroke-width="2"/>
+    <g clip-path="url(#tube)"><rect x="8" y="${bottom - fill}" width="18" height="${fill}" fill="var(--water)"/></g>${ticks}</svg>`;
+}
+function renderHeader(){
+  $("#range").textContent = `${fmt(plan.week_start)} to ${fmt(plan.week_end)}, ${plan.location}`;
+  $("#facts").replaceChildren(
+    h("span", {}, "Sunlight: ", h("b", {}, plan.sun === "full" ? "full sun" : "partial shade")),
+    h("span", {}, "Garden: ", h("b", {}, plan.size_sqm ? `${plan.size_sqm} m²` : "not set"))
+  );
+  const g = $("#gauge");
+  g.innerHTML = gaugeSVG(plan.rain);
+  g.append(h("strong", {}, plan.rain_label.charAt(0).toUpperCase() + plan.rain_label.slice(1)), "rain this month");
+}
+function renderProgress(){
+  const all = [...plan.harvest, ...plan.care]; // sowing is a suggestion, so it isn't counted
+  const done = all.filter((i) => i.done).length;
+  $("#fill").style.width = all.length ? (100 * done / all.length) + "%" : "0%";
+  $("#ptext").textContent = all.length ? `${done} of ${all.length} done` : "Nothing planned";
+}
+
+/* ---------- checklist ---------- */
+const TICK = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 4.6"/></svg>';
+function row(item){
+  const input = h("input", { type: "checkbox", checked: item.done, "data-id": item.id, onchange: (e) => toggle(item, e.target) });
+  const box = h("span", { class: "box" }); box.innerHTML = TICK;
+  const tags = [];
+  if (item.overdue && !item.done) tags.push(h("span", { class: "tag late" }, "Past its best, harvest soon"));
+  if (item.caution) tags.push(h("span", { class: "tag warn" }, item.caution));
+  if (item.growing) tags.push(h("span", { class: "tag ok" }, "You already have this growing"));
+  return h("label", { class: "row" + (item.done ? " done" : "") }, input, box,
+    h("span", { class: "txt" },
+      h("span", { class: "t" }, item.title, item.local && h("span", { class: "local" }, item.local)),
+      item.detail && h("span", { class: "d" }, item.detail),
+      item.tip && h("span", { class: "tip" }, item.tip),
+      tags.length ? h("span", { class: "tags" }, tags) : null));
+}
+function section(title, sub, items, emptyText, extra){
+  return h("section", { class: "list" },
+    h("h2", {}, title, h("small", {}, sub)),
+    items.length ? items.map(row) : h("p", { class: "empty" }, emptyText), extra);
+}
+function renderLists(){
+  const focusId = document.activeElement && document.activeElement.dataset && document.activeElement.dataset.id;
+  const LIMIT = 6;
+  const sowItems = showAllSow ? plan.sow : plan.sow.slice(0, LIMIT);
+  const more = plan.sow.length > LIMIT
+    ? h("button", { class: "more", type: "button", onclick: () => { showAllSow = !showAllSow; renderLists(); } },
+        showAllSow ? "Show fewer" : `Show ${plan.sow.length - LIMIT} more crops`) : null;
+  const hold = plan.hold.length
+    ? h("p", { class: "hold" }, "Wait for drier weather before sowing: " + plan.hold.join(", ") + ".") : null;
+  const hv = plan.harvest.filter((i) => !i.done).length;
+  $("#lists").replaceChildren(
+    section("Harvest", hv ? `${hv} to pick` : "", plan.harvest, "Nothing is ready yet. When you plant something below, it shows up here when it's close to ready."),
+    section("Sow and plant", `${plan.sow.length} suit this month`, sowItems, "Nothing suits this month. Check back next month.", [more, hold]),
+    section("Care", `${plan.care.filter((i) => !i.done).length} left`, plan.care, "")
+  );
+  if (focusId){
+    const el = document.querySelector(`[data-id="${CSS.escape(focusId)}"]`);
+    if (el) el.focus({ preventScroll: true });
+  }
+}
+async function toggle(item, input){
+  input.disabled = true;
+  try {
+    plan = await api("/api/check", { id: item.id, done: input.checked });
+    renderAll();
+    if (item.id.startsWith("sow:") && input.checked) toast(`${item.title} added to My garden`);
+  } catch (e){
+    toast(e.message); input.checked = !input.checked; input.disabled = false;
+  }
+}
+
+/* ---------- my garden ---------- */
+function renderGarden(){
+  $("#minecount").textContent = plan.garden.length ? `${plan.garden.length} planted` : "";
+  const sel = $("#addcrop");
+  if (!sel.options.length) plan.crop_options.forEach((c) => sel.append(h("option", { value: c.id }, `${c.title} (${c.local})`)));
+  if (!$("#adddate").value) $("#adddate").value = DEMO || plan.today;
+  $("#sun").value = plan.sun;
+  if (document.activeElement !== $("#size")) $("#size").value = plan.size_sqm || "";
+  const rows = plan.garden.filter((r) => !r.harvested);
+  $("#beds").replaceChildren(...(rows.length ? rows : [null]).map((r) => r
+    ? h("li", {},
+        h("div", {}, h("b", {}, r.title), " ", h("span", { class: "meta" }, r.local)),
+        h("button", { class: "link", type: "button", onclick: () => unplant(r) }, "Remove"),
+        h("div", { class: "meta" }, `Planted ${fmt(r.planted)}. ` + (r.days_left > 0 ? `Ready around ${fmt(r.ready)}.` : "Ready to harvest.")),
+        h("span"),
+        h("div", { class: "meter", role: "img", "aria-label": `${r.pct}% of the way to harvest` }, h("i", { class: r.days_left <= 0 ? "ready" : "", style: `width:${r.pct}%` })))
+    : h("li", {}, h("span", { class: "meta" }, "Nothing planted yet. Add what you already have growing, or tick a crop under Sow and plant."))));
+}
+async function unplant(r){
+  try { plan = await api("/api/unplant", { crop: r.crop, planted: r.planted }); renderAll(); toast(`${r.title} removed`); }
+  catch (e){ toast(e.message); }
+}
+$("#addform").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  try {
+    plan = await api("/api/plant", { crop: $("#addcrop").value, planted: $("#adddate").value });
+    renderAll(); toast("Added to My garden");
+  } catch (err){ toast(err.message); }
+});
+$("#setform").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  try {
+    plan = await api("/api/settings", { sun: $("#sun").value, size_sqm: $("#size").value });
+    renderAll(); loadNote(); toast("Settings saved");
+  } catch (err){ toast(err.message); }
+});
+
+/* ---------- Gemma note ---------- */
+let noteToken = 0;
+async function loadNote(){
+  const token = ++noteToken;
+  const box = $("#note");
+  const toggleBtns = h("span", { class: "lang", role: "group", "aria-label": "Note language" },
+    ["en", "si"].map((l) => h("button", { type: "button", "aria-pressed": String(lang === l),
+      onclick: () => { lang = l; store.set("lang", l); loadNote(); } }, l === "en" ? "EN" : "සිං")));
+  const head = (label) => h("div", { class: "who" }, h("span", {}, label), toggleBtns);
+  box.replaceChildren(head("Gemma is writing this week's note on your laptop"), h("span", { class: "skel" }), h("span", { class: "skel", style: "width:70%" }));
+  try {
+    const r = await api("/api/note?lang=" + lang);
+    if (token !== noteToken) return;
+    if (r.note) box.replaceChildren(head(`Note from ${r.model}, running on your laptop`), h("p", { class: "text" }, r.note));
+    else box.replaceChildren(head("Weekly note is off"), h("p", { class: "off" }, r.error + " The checklist below works without it."));
+  } catch (e){
+    if (token !== noteToken) return;
+    box.replaceChildren(head("Weekly note is off"), h("p", { class: "off" }, e.message));
+  }
+}
+
+function renderAll(){ renderHeader(); renderProgress(); renderLists(); renderGarden(); }
+(async function init(){
+  try { plan = await api("/api/plan"); renderAll(); loadNote(); }
+  catch (e){ $("#lists").replaceChildren(h("p", { class: "empty" }, "Can't reach the planner. Make sure server.py is still running. " + e.message)); }
+})();
+</script>
+</body>
+</html>

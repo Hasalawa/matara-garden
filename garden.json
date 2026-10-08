@@ -1,0 +1,11 @@
+{
+  "size_sqm": 20,
+  "sun": "full",
+  "planted": [
+    {
+      "crop": "thampala",
+      "date": "2026-10-09"
+    }
+  ],
+  "checks": {}
+}
